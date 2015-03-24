@@ -27,14 +27,18 @@ def init():
     os.chdir(config_dir)
 
 def add(args):
+    note = ' '.join(args.note)
+    if note.replace(' ','') == '':
+        return False
     current_time = time.time()
     entry = snotes_persistence.Entry(current_time,
                                      current_time,
                                      args.tags,
-                                     ' '.join(args.note))
+                                     note)
     global journal
     journal.add_or_merge_entry(entry)
     journal.to_file(data_file)
+    return True
 
 def get(args):
     global journal
@@ -43,7 +47,7 @@ def get(args):
         lambda entry:entry.update_timestamp
     )
     for entry in entries:
-        print entry.value
+        print(entry.value)
     
 init()
 arg_parser = argparse.ArgumentParser()
